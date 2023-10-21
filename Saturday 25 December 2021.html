@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>7:42am Saturday 25 December 2021</title>
+    <script
+      src="https://unpkg.com/react@17/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body {
+        background-color: #fea600;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      .container {
+        max-width: 1170px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+
+      .stopwatch {
+        color: #fff;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50vh;
+        transform: translateY(-70%);
+      }
+      .stopwatch h2 {
+        font-size: 3rem;
+        font-family: cursive;
+        margin-bottom: 2rem;
+      }
+
+      .stopwatch a {
+          border: 1px solid #fff;
+          border-radius: 5px;
+          text-decoration: none;
+          color: #fff;
+          margin: 10px 13px;
+          padding: 10px 24px;
+          font-weight: 700;
+          letter-spacing: 1px;
+        }
+        .stopwatch a:hover {
+            background-color: #fff;
+            color: #ffcd00;
+        }
+
+      .stopwatch .timer {
+        font-size: 3.4rem;
+        font-weight: 700;
+        margin-bottom: 2.5rem;
+      }
+
+      .d-none {
+        display: none;
+      }
+
+      .d-inline-block {
+        display: inline-block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+<script type="text/babel">
+  function App() {
+    let [tens, setTens] = React.useState("00");
+    let [seconds, setSeconds] = React.useState("00");
+    let [minutes, setMinutes] = React.useState("00");
+    let [hours, setHours] = React.useState("00");
+    let [showSeconds, setShowSeconds] = React.useState(0);
+    let [showMinutes, setShowMinutes] = React.useState(0);
+    let [showhours, setShowHours] = React.useState(0);
+    let intervalId = React.useRef(null);
+
+    function startWatch() {
+      clearInterval(intervalId.current);
+      intervalId.current = setInterval(function () {
+        tens++;
+        tens = tens < 10 ? "0" + tens : tens;
+        tens = tens > 99 ? "00" : tens;
+        setTens(tens);
+        if (tens === "00") {
+          setShowSeconds(true);
+          seconds++;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+          seconds = seconds > 59 ? "00" : seconds;
+          setSeconds(seconds);
+          if (seconds === "00") {
+            setShowMinutes(true);
+            minutes++;
+            minutes = minutes < 10 ? 0 + "" + minutes : minutes;
+            minutes = minutes > 59 ? "00" : minutes;
+            setMinutes(minutes);
+            if (minutes === "00") {
+              setShowHours(true);
+              hours++;
+              hours = hours < 10 ? "0" + hours : hours;
+              setHours(hours);
+            }
+          }
+        }
+      }, 10);
+      event.preventDefault();
+    }
+
+    function stopWatch() {
+      clearInterval(intervalId.current);
+      event.preventDefault();
+    }
+
+    function resetWatch() {
+      clearInterval(intervalId.current);
+      setTens("00");
+      setSeconds("00");
+      setMinutes("00");
+      setHours("00");
+      event.preventDefault();
+    }
+
+    return (
+      <div className="stopwatch">
+        <h2>Stopwatch</h2>
+        <p className="timer">
+          <span className={showhours ? "d-inline-block" : "d-none"}>
+            {hours} : &nbsp;
+          </span>
+          <span className={showMinutes ? "d-inline-block" : "d-none"}>
+            {minutes} : &nbsp;
+          </span>
+          <span className={showSeconds ? "d-inline-block" : "d-none"}>
+            {seconds} : &nbsp;
+          </span>
+          <span className="tens">{tens}</span>
+        </p>
+        <a onClick={startWatch} href="#">
+          Start
+        </a>
+        <a onClick={stopWatch} href="#">
+          Stop
+        </a>
+        <a onClick={resetWatch} href="#">
+          Reset
+        </a>
+      </div>
+    );
+  }
+  ReactDOM.render(<App />, document.getElementById("root"));
+</script>
